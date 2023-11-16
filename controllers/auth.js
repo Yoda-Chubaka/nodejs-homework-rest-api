@@ -3,8 +3,6 @@ import jwt from 'jsonwebtoken';
 import { HttpError } from '../helpers/HttpError.js';
 import { User } from '../models/user.js';
 
-const { SECRET_KEY } = process.env;
-
 export const register = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -39,7 +37,7 @@ export const login = async (req, res) => {
     const payload = {
         id: user._id,
     };
-    
+    const { SECRET_KEY } = process.env;
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
     await User.findByIdAndUpdate(user._id, { token });
     res.status(200).json({
