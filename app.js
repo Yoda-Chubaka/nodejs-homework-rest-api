@@ -15,7 +15,7 @@ app.use(logger(formatsLogger))
 app.use(cors())
 app.use(express.json())
 
-app.use('/api/auth', authRouter);
+app.use('/users', authRouter);
 app.use('/api/contacts', bookRouter);
 
 app.use((req, res) => {
