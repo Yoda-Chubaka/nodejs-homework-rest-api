@@ -1,7 +1,7 @@
 import multer from "multer";
 import path from 'path';
 
-export const tempDir = path.resolve("temp");
+export const tempDir = path.join(process.cwd(), './', 'temp');
 
 const storage = multer.diskStorage({
     destination: tempDir, 
