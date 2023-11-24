@@ -88,8 +88,7 @@ export const patchSubscription = async (req, res) => {
 
 export const updateAvatar = async (req, res) => {
     const { _id } = req.user;
-    const {path: tempUpload, originalname} = req.file;
-    const filename = `${_id}_${originalname}`;
+    const { path: tempUpload, filename } = req.file;
     const resultUpload = path.join(avatarsDir, filename);
 
     Jimp.read(tempUpload, (err, image) => {
@@ -98,7 +97,6 @@ export const updateAvatar = async (req, res) => {
             .write(resultUpload);
     });
     await fs.unlink(tempUpload);
-    await fs.rename(tempUpload, resultUpload);
 
     const avatarURL = path.join('avatars', filename);
     await User.findByIdAndUpdate(_id, { avatarURL });
