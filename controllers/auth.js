@@ -87,6 +87,10 @@ export const patchSubscription = async (req, res) => {
 };
 
 export const updateAvatar = async (req, res) => {
+    if (!req.file) {
+    throw HttpError(400, 'Avatar must be provided');
+    }
+    
     const { _id } = req.user;
     const { path: tempUpload, filename } = req.file;
     const resultUpload = path.join(avatarsDir, filename);
