@@ -25,6 +25,8 @@ const contactSchema = new Schema({
 }, {versionKey: false, timestamps: true});
 
 contactSchema.post("save", handleMongooseError);
+// contactSchema.pre("findOneAndUpdate", runValidatorsAtUpdate);
+contactSchema.post("findOneAndUpdate", handleMongooseError);
 
 export const addSchema = Joi.object({
     name: Joi.string()
@@ -43,10 +45,6 @@ export const addSchema = Joi.object({
             'any.required': `Missing required email field`,
         })
 })
-
-// export const updateFavoriteSchema = Joi.object({
-//   favorite: Joi.boolean().required().messages({ 'any.required': 'Missing field favorite' }),
-// });
 
 export const putSchema = Joi.object({
     name: Joi.string(),

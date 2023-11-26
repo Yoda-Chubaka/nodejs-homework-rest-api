@@ -2,9 +2,16 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { HttpError } from '../helpers/HttpError.js';
 import { User } from '../models/user.js';
+import gravatar from 'gravatar';
+import path from 'path';
+import fs from 'fs/promises';
+import Jimp from "jimp";
+import { tempDir } from '../middlewares/upload.js';
 
 const { SECRET_KEY } = process.env;
 console.log(SECRET_KEY)
+
+const avatarsDir = path.resolve('public', 'avatars');
 
 export const register = async (req, res) => {
     const { email, password } = req.body;
@@ -15,8 +22,8 @@ export const register = async (req, res) => {
     };
 
     const hashPassword = await bcrypt.hash(password, 10);
-
-    const newUser = await User.create({...req.body, password: hashPassword});
+    const avatarURL = gravatar.url(email);
+    const newUser = await User.create({...req.body, password: hashPassword, avatarURL});
     res.status(201).json({
         user: {
             email: newUser.email,
@@ -77,4 +84,26 @@ export const patchSubscription = async (req, res) => {
         throw HttpError(404, "Not found")
     }
     res.status(200).json(result);
+};
+
+export const updateAvatar = async (req, res) => {
+    if (!req.file) {
+    throw HttpError(400, 'Avatar must be provided');
+    }
+    
+    const { _id } = req.user;
+    const { path: tempUpload, filename } = req.file;
+    const resultUpload = path.join(avatarsDir, filename);
+
+    Jimp.read(tempUpload, (err, image) => {
+        if (err) throw HttpError(404, err);
+        image.resize(250, 250)
+            .write(resultUpload);
+    });
+    await fs.unlink(tempUpload);
+
+    const avatarURL = path.join('avatars', filename);
+    await User.findByIdAndUpdate(_id, { avatarURL });
+
+    res.status(200).json({ avatarURL });
 };
