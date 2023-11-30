@@ -14,7 +14,7 @@ const api = new ElasticEmail.EmailsApi();
  
 export const sendEmail = ElasticEmail.EmailMessageData.constructFromObject({
   Recipients: [
-    new ElasticEmail.EmailRecipient("cilohiv171@cumzle.com")
+    new ElasticEmail.EmailRecipient("jatal88433@cumzle.com")
   ],
   Content: {
     Body: [
@@ -27,3 +27,13 @@ export const sendEmail = ElasticEmail.EmailMessageData.constructFromObject({
     From: EMAIL_FROM
   }
 });
+
+const callback = function(error, data, response) {
+  if (error) {
+    console.error(error.message);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+
+api.emailsPost(sendEmail, callback);
