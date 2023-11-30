@@ -22,15 +22,26 @@ const userSchema = new Schema({
         type: String,
         require: true
     },
+    verify: {
+        type: Boolean,
+        default: false,
+    },
+    verificationToken: {
+        type: String,
+        required: [true, 'Verify token is required'],
+    },
     token: String
 }, { versionKey: false, timestamps: true });
 
 userSchema.post("save", handleMongooseError);
-// userSchema.pre("findOneAndUpdate", runValidatorsAtUpdate);
 userSchema.post("findOneAndUpdate", handleMongooseError);
 
 export const registerSchema = Joi.object({
     password: Joi.string().min(6).required(),
+    email: Joi.string().email().required(),
+});
+
+export const verifyEmailSchema = Joi.object({
     email: Joi.string().email().required(),
 });
 
