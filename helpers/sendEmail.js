@@ -15,16 +15,16 @@ const api = new ElasticEmail.EmailsApi();
 export const sendEmail = async ({ to, subject, html }) => {
     const email = ElasticEmail.EmailMessageData.constructFromObject({
         Recipients: [
-            new ElasticEmail.EmailRecipient("limog87256@bustayes.com")
+            new ElasticEmail.EmailRecipient("mayide3675@cumzle.com")
         ],
         Content: {
             Body: [
                 ElasticEmail.BodyPart.constructFromObject({
                     ContentType: "HTML",
-                    Content: "<strong>Test email</strong>"
+                    Content: html
                 })
             ],
-            Subject: "Test email",
+            Subject: subject,
             From: EMAIL_FROM
         }
     });
@@ -37,6 +37,6 @@ export const sendEmail = async ({ to, subject, html }) => {
         }
     };
 
-    api.emailsPost(sendEmail, callback);
+    api.emailsPost(email, callback);
     return true;
 }
