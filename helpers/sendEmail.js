@@ -15,7 +15,7 @@ const api = new ElasticEmail.EmailsApi();
 export const sendEmail = async ({ to, subject, html }) => {
     const email = ElasticEmail.EmailMessageData.constructFromObject({
         Recipients: [
-            new ElasticEmail.EmailRecipient("mayide3675@cumzle.com")
+            new ElasticEmail.EmailRecipient(to)
         ],
         Content: {
             Body: [
